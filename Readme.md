@@ -5,8 +5,8 @@ It returns 1 if the files are different, 0 if they are the same.
 
 ## Usage
 
-    eddcmp file1.edd file2.edd
+    eddcmp original_file test_file
 
 ## Installation
     make
-    sudo make install
+    make install
