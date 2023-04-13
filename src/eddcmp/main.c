@@ -11,6 +11,25 @@ void check_args(int argc, char *argv[]){
     }
 }
 
+int compare_without_spaces(const char *s1, const char *s2){
+    while (*s1 != '\0' && *s2 != '\0'){
+        if (*s1 == ' ' || *s1 == '\t'){
+            s1++;
+            continue;
+        }
+        if (*s2 == ' ' || *s2 == '\t'){
+            s2++;
+            continue;
+        }
+        if (*s1 != *s2){
+            return *s1 - *s2;
+        }
+        s1++;
+        s2++;
+    }
+    return 0;
+}
+
 int main(int argc, char *argv[]){
     check_args(argc, argv);
 
@@ -24,7 +43,7 @@ int main(int argc, char *argv[]){
     while (fgets(line1, MAX_LINE_LENGTH, original) != NULL){
         line_number++;
         fgets(line2, MAX_LINE_LENGTH, target);
-        if (strcmp(line1, line2) != 0){
+        if (compare_without_spaces(line1, line2) != 0){
             printf("Files are different at line: %d\n", line_number);
             return 1;
         }
