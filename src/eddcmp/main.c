@@ -3,12 +3,25 @@
 #include <string.h>
 #define MAX_LINE_LENGTH 4096
 
+void check_file_exists(char *filename){
+    FILE *file = fopen(filename, "r");
+
+    if (file == NULL){
+        printf("File %s does not exist\n", filename);
+        exit(1);
+    }
+
+    fclose(file);
+}
+
 void check_args(int argc, char *argv[]){
     if (argc != 3){
         printf("Usage: %s <file1> <file2> \n", argv[0]);
         printf("Where <file1> and <file2> are the files to compare\n");
         exit(1);
     }
+    check_file_exists(argv[1]);
+    check_file_exists(argv[2]);
 }
 
 int compare_without_spaces(const char *s1, const char *s2){
