@@ -47,11 +47,9 @@ int compare_without_spaces(const char *s1, const char *s2){
     return 0;
 }
 
-int main(int argc, char *argv[]){
-    check_args(argc, argv);
-
-    FILE *original = fopen(argv[1], "r");
-    FILE *target = fopen(argv[2], "r");
+int compare_text_files(char* source_filename, char* target_filename){
+    FILE *original = fopen(source_filename, "r");
+    FILE *target = fopen(target_filename, "r");
 
     char line1[MAX_LINE_LENGTH];
     char line2[MAX_LINE_LENGTH];
@@ -62,11 +60,51 @@ int main(int argc, char *argv[]){
         fgets(line2, MAX_LINE_LENGTH, target);
         if (compare_without_spaces(line1, line2) != 0){
             printf("Files are different at line: %d\n", line_number);
-            return 1;
+            exit(1);
         }
         memset(line1, 0, MAX_LINE_LENGTH);
         memset(line2, 0, MAX_LINE_LENGTH);
     }
 
+    return 0;
+}
+
+
+int compare_binary_files(char* source_filename, char* target_filename){
+    FILE *original = fopen(source_filename, "r");
+    FILE *target = fopen(target_filename, "r");
+
+    char byte1;
+    char byte2;
+    int byte_number = 0;
+
+    while (fread(&byte1, sizeof(char), 1, original) != 0){
+        byte_number++;
+        fread(&byte2, sizeof(char), 1, target);
+        if (byte1 != byte2){
+            printf("Files are different at byte: %d\n", byte_number);
+            exit(1);
+        }
+    }
+
+    return 0;
+}
+
+int compare_files(char* source, char* target){
+    char *source_extension = strrchr(source, '.');
+
+    if (strcmp(source_extension, ".png") == 0 || strcmp(source_extension, ".bin") == 0){
+        compare_binary_files(source, target);
+    } else {
+        compare_text_files(source, target);
+    }
+    return 0;
+}
+
+
+int main(int argc, char *argv[]){
+    check_args(argc, argv);
+
+    compare_files(argv[1], argv[2]);
     return 0;
 }
